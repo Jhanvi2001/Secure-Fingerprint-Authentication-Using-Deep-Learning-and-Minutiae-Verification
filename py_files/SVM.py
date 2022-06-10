@@ -6,7 +6,7 @@ Created on Mon Jun  6 10:38:21 2022
 @edited: settler
 """
 from tqdm import tqdm
-from untitled0 import LocalBinaryPatterns
+from LBP_helper import LocalBinaryPatterns
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.svm import SVC
 from imutils import paths
@@ -16,14 +16,17 @@ import os
 # initialize the local binary patterns descriptor along with
 # the data and label lists
 desc = LocalBinaryPatterns(24, 8)
-data = [] # Will
+data = []  # Will
 labels = []
-
-
+home_path = os.getcwd()
+import glob
 # loop over the training images
-imagePaths = list(paths.list_images('training')) + list(paths.list_images('testing'))
+# imagePaths = list(paths.list_images('Dataset\\training')) + list(paths.list_images('Dataset\\testing'))
+imagePaths = glob.iglob('Dataset/' + '**/*.png', recursive=True)
+print(list(imagePaths))
+print(list(paths.list_images('testing')))
 print("Done with storing the list of images")
-
+exit(0)
 print("Started image processing")
 for imagePath in tqdm(imagePaths):
     # load the image, convert it to grayscale, and describe it
@@ -53,7 +56,6 @@ grid_search.fit(x_train, y_train)
 params = grid_search.best_params_
 print("Best parameter: ", params)
 
-
 model = SVC(kernel='rbf', C=params['C'], gamma=params['gamma'], verbose=True)
 model.fit(x_train, y_train)
 model.score(x_test, y_test)
@@ -64,13 +66,13 @@ print("train accuracy: ", model.score(x_train, y_train))
 # import numpy as np
 # from keras.preprocessing import image
 
-test_image = cv2.imread("Fake_1.png")
-gray1 = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
-hist1 = desc.describe(gray1)
-
-result = model.predict(hist1.reshape(1, -1))
-if result[0][0] == 1:
-    prediction = 'Live'
-else:
-    prediction = 'Fake'
-print(result)
+# test_image = cv2.imread("Fake_1.png")
+# gray1 = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
+# hist1 = desc.describe(gray1)
+#
+# result = model.predict(hist1.reshape(1, -1))
+# if result[0][0] == 1:
+#     prediction = 'Live'
+# else:
+#     prediction = 'Fake'
+# print(result)
