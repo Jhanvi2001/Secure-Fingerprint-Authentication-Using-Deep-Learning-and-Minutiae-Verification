@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} Home page {% endblock %}
+{% block content %}
+<div class='main-container'>
+    <div class="header">
+        <div class="header-content">
+            <!--            Write title -->
+            Secure Fingerprint Authentication Module
+        </div>
+    </div>
+    <div class="tab-items">
+        <h1>Fingerprint Classification</h1>
+        <hr>
+    </div>
+
+    <div class="sub-container">
+        <div class="imgage-container">
+            <!--            add how to img-->
+        </div>
+
+        <div class="upload-container">
+            <div class="upload-title">
+                <h1>Upload Fingerprint</h1>
+                <hr>
+            </div>
+            <form action='/' enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
+                <div class="upload-form">
+                    <label for="inputTag">
+                        <br/>
+                        Select Image (png/ jpeg/ jpg)<br/><br/>
+                        <i class="fa fa-2x fa-camera"></i>
+                        <br/>
+                        <input id="inputTag" name='file' type="file" onchange="readURL(this);" accept="image/jpeg, image/png, image/jpg"/>
+                        <br/>
+                        <span id="imageName"></span>
+                    </label>
+                </div>
+                <div>
+                    <input class = 'run-py' type="submit" value="Run Script">
+                </div>
+            </form>
+            <div class="py-result">
+                {{data}}
+                {{filenames}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

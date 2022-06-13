@@ -27,3 +27,24 @@ function checkFiles(files) {
         document.getElementById('files').files = list.files
     }
 }
+// input should not be empty
+function validateForm() {
+    let files = document.getElementById('inputTag');
+    if (files.value === "") {
+        alert("Please select a file");
+        return false;
+    }
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            $('#blah')
+                .attr('src', e.target.result)
+                .width(150)
+                .height(200);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}

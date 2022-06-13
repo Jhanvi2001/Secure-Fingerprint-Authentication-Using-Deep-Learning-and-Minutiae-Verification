@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%} {%endblock%}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <script src="https://use.fontawesome.com/3a2eaf6206.js"></script>
+</head>
+<body>
+<aside class="side-bar-wrap">
+    <nav class="side-bar">
+        <div class="logo-area">
+            <img class="min" src="{{url_for('static', filename='min-logo.png')}}" alt="logo">
+            <img class="max" src="{{url_for('static', filename='max-logo.png')}}" alt="logo">
+        </div>
+        <ul>
+            <li class="active">
+                <a href="/">
+                            <span class="icon">
+                                <ion-icon name="git-network"></ion-icon>
+                            </span>
+                    <span class="title">Classification</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('reconstruction')}}">
+                            <span class="icon">
+                                <ion-icon name="construct"></ion-icon>
+                            </span>
+                    <span class="title">Reconstruction</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{url_for('matching')}}">
+                            <span class="icon">
+                                <ion-icon name="finger-print"></ion-icon>
+                            </span>
+                    <span class="title">Matching</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/">
+                            <span class="icon">
+                                <ion-icon name="information-circle-outline"></ion-icon>
+                            </span>
+                    <span class="title">About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+{% block content%}
+
+{% endblock%}
+
+</body>
+<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+<script src="../static/script.js"></script>
+</html>
