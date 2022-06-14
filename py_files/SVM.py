@@ -5,6 +5,9 @@ Created on Mon Jun  6 10:38:21 2022
 @author: sjhan
 @edited: settler
 """
+'''
+Incase you get an error saying data has not been read then run it in the cmd after activating the virtual environment
+'''
 from tqdm import tqdm
 from LBP_helper import LocalBinaryPatterns
 from sklearn.model_selection import train_test_split, GridSearchCV
@@ -23,10 +26,10 @@ import glob
 # loop over the training images
 # imagePaths = list(paths.list_images('Dataset\\training')) + list(paths.list_images('Dataset\\testing'))
 imagePaths = glob.iglob('Dataset/' + '**/*.png', recursive=True)
-print(list(imagePaths))
-print(list(paths.list_images('testing')))
+# print(list(imagePaths))
+# print(list(paths.list_images('testing')))
 print("Done with storing the list of images")
-exit(0)
+
 print("Started image processing")
 for imagePath in tqdm(imagePaths):
     # load the image, convert it to grayscale, and describe it
@@ -50,7 +53,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2,
 Performing GridSearchCV with 5 folds to get the best value of parameters
 '''
 grid_search = GridSearchCV(SVC(kernel='rbf'),
-                           param_grid={'C': [100, 1000, 10000, 100000], 'gamma': [10, 1, 0.1, 0.01, .0001, 100, 1000]},
+                           param_grid={'C': [100, 1000, 10000, 100000], 'gamma': [10, 1, 0.1, 0.01, .0001]},
                            cv=5, verbose=True)
 grid_search.fit(x_train, y_train)
 params = grid_search.best_params_
@@ -58,7 +61,14 @@ print("Best parameter: ", params)
 
 model = SVC(kernel='rbf', C=params['C'], gamma=params['gamma'], verbose=True)
 model.fit(x_train, y_train)
+
+#save the model with joblibpython 
+import joblib
+filename = 'model/SVM_rbf.h5'
+joblib.dump(model, filename)
+
 model.score(x_test, y_test)
+print(model.predict(x_test[1].reshape(1, -1)))
 print("Test accuracy: ", model.score(x_test, y_test))
 print("train accuracy: ", model.score(x_train, y_train))
 
