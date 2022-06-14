@@ -63,14 +63,6 @@ def index():
         gray = cv2.imread(imagePath, cv2.IMREAD_GRAYSCALE)
         data = desc.describe(gray)
         model = joblib.load('model\\SVM_rbf.h5')
-        # print(model.predict(data.reshape(1, -1)))
-
-
-        # temp = randint(0, 100)
-        # if temp % 2 == 0:
-        #     data = "Real"
-        # else:
-        #     data = "Fake"
         return render_template('index.html', filenames=model.predict(data.reshape(1, -1)))
     else:
         return render_template('index.html')

@@ -35,9 +35,18 @@
                         <span id="imageName"></span>
                     </label>
                 </div>
-                <div>
-                    <input class = 'run-py' type="submit" value="Run Script">
-                </div>
+                <div class = 'form-container'>
+                    <div class = "sel-algo-container">
+                      <Select class = "sel-algo" id="selectTag" name="selectTag">
+                        <option value="svm">Suport Vector Machine</option>
+                        <option value="cnn">Convolutional Nueral Network</option>
+                      </Select>
+                    </div>
+                    <div>
+                        <input class = 'run-py-Classification' type="submit" value="Run Script">
+                    </div>
+                  </div>
+                
             </form>
             <div class="py-result">
                 {{data}}
