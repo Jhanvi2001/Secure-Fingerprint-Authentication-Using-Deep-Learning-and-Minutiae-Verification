@@ -37,9 +37,9 @@
                 </div>
                 <div class = 'form-container'>
                     <div class = "sel-algo-container">
-                      <Select class = "sel-algo" id="selectTag" name="selectTag">
-                        <option value="svm">Suport Vector Machine</option>
-                        <option value="cnn">Convolutional Nueral Network</option>
+                      <Select class = "sel-algo" id="selectTag" name="algo-sel">
+                        <option value="svm">Support Vector Machine</option>
+                        <option value="cnn">Convolutional Neural Network</option>
                       </Select>
                     </div>
                     <div>
@@ -49,8 +49,9 @@
                 
             </form>
             <div class="py-result">
-                {{data}}
-                {{filenames}}
+                Algo - {{modelName}}<br>
+                Result - {{result}}<br>
+                
             </div>
         </div>
     </div>

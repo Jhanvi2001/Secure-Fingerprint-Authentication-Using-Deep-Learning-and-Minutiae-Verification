@@ -53,13 +53,13 @@ x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2,
 Performing GridSearchCV with 5 folds to get the best value of parameters
 '''
 grid_search = GridSearchCV(SVC(kernel='rbf'),
-                           param_grid={'C': [100, 1000, 10000, 100000], 'gamma': [10, 1, 0.1, 0.01, .0001]},
+                           param_grid={'C': [10, 100, 1000, 10000, 100000], 'gamma': [100, 10, 1, 0.1, 0.01, .0001]},
                            cv=5, verbose=True)
 grid_search.fit(x_train, y_train)
 params = grid_search.best_params_
 print("Best parameter: ", params)
 
-model = SVC(kernel='rbf', C=params['C'], gamma=params['gamma'], verbose=True)
+model = SVC(kernel='rbf', C=params['C'], gamma=params['gamma'], probability=True,verbose=True)
 model.fit(x_train, y_train)
 
 #save the model with joblibpython 
@@ -69,6 +69,7 @@ joblib.dump(model, filename)
 
 model.score(x_test, y_test)
 print(model.predict(x_test[1].reshape(1, -1)))
+print(model.predict_proba(x_test[1].reshape(1, -1)))
 print("Test accuracy: ", model.score(x_test, y_test))
 print("train accuracy: ", model.score(x_train, y_train))
 

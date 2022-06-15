@@ -4,18 +4,16 @@ Created on Mon Jun  6 18:32:32 2022
 
 @author: sjhan
 """
-import keras
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
-from keras.preprocessing.image import ImageDataGenerator
-import matplotlib.pyplot as plt
-import numpy as np
-from keras.preprocessing import image
+import os
+
+import joblib
 
 train_path = 'Dataset/training/'
 test_path = 'Dataset/testing/'
 
 # data generator
+import tensorflow as tf
+from keras.preprocessing.image import ImageDataGenerator
 
 train_data = ImageDataGenerator(rescale=1. / 255)
 train_set = train_data.flow_from_directory(directory=train_path, target_size=(128, 128), batch_size=32,
@@ -25,7 +23,9 @@ test_data = ImageDataGenerator(rescale=1. / 255)
 test_set = train_data.flow_from_directory(directory=test_path, target_size=(128, 128), batch_size=32, color_mode="rgb",
                                           class_mode='binary')
 
-
+import keras
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
 
 model = Sequential()
 
@@ -48,6 +48,8 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 model_history = model.fit(train_set, validation_data=test_set, epochs=10)
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 plt.style.use("ggplot")
 plt.figure()
@@ -59,16 +61,20 @@ plt.title("Training and validation Accuracy on Dataset")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
+model.save(os.path.join("./model/", "CNN_classification.h5"))
+# check image
+import numpy as np
+from tensorflow.keras.preprocessing import image
+import tensorflow as tf
 
-# # check image
-#
-# test_image = image.load_img('Fake.png', target_size=(128, 128))
-# test_image = image.img_to_array(test_image)
-# test_image = np.expand_dims(test_image, axis=0)
-# result = model.predict(test_image)
-# # train_set.class_indices
-# if result[0][0] == 1:
-#     prediction = 'Live'
-# else:
-#     prediction = 'Fake'
-# print(prediction)
+model = tf.keras.models.load_model('../model/CNN_classification.h5')
+test_image = image.load_img('../Dataset/testing/Fake/2_1.png', target_size=(128, 128))
+test_image = image.img_to_array(test_image)
+test_image = np.expand_dims(test_image, axis=0)
+result = model.predict(test_image)
+# train_set.class_indices
+if result[0][0] == 1:
+    prediction = 'Live'
+else:
+    prediction = 'Fake'
+print(prediction)
