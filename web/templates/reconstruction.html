@@ -23,23 +23,42 @@
                 <h1>Upload Fingerprints</h1>
                 <hr>
             </div>
-            <div class="upload-form">
-                <label for="inputTag">
-                    <br/>
-                    Select Image (png/ jpeg/ jpg)<br/><br/>
-                    <i class="fa fa-2x fa-camera"></i>
-                    <br/>
-                    <input id="inputTag" type="file" accept="image/jpeg, image/png, image/jpg " multiple="multiple" onchange="checkFiles(this.files)"/>
-                    <br/>
-                    <span id="imageName"></span>
-                </label>
-            </div>
-            <div class="run-py">
-                Run Script
-                <!--                call classification model here-->
-            </div>
-            <div class="py-result">
-                Real / Fake
+            <form action='/reconstruction' enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
+                <div class="upload-form">
+                    <label for="inputTag">
+                        <br/>
+                        Select Image (png/ jpeg/ jpg)<br/><br/>
+                        <i class="fa fa-2x fa-camera"></i>
+                        <br/>
+                        <input id="inputTag" name='file' type="file" onchange="readURL(this);"
+                               accept="image/jpeg, image/png, image/jpg"/>
+                        <br/>
+                        <span id="imageName"></span>
+                    </label>
+                </div>
+                <div>
+                    <input class='run-py' type="submit" value="Run Script"/>
+                </div>
+            </form>
+            <div style="width: 200px;
+    height: 200px;
+    margin: auto;
+    border: thin solid black;
+    background: rgba(51, 172, 227, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;">
+                <div>
+                    {{result}}
+                </div>
+                <div style="margin-bottom: 0px;margin-top: 50px;padding: 10px">
+                    <a href="/get_image/{{filename}}" target="blank">
+                        <button type="button" style="border-radius: 10px; height: 30px; width: 150px">See the Image
+                        </button>
+                        {{filename}}
+                    </a>
+                </div>
                 <!--                classification result here-->
             </div>
         </div>

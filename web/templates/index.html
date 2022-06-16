@@ -30,28 +30,37 @@
                         Select Image (png/ jpeg/ jpg)<br/><br/>
                         <i class="fa fa-2x fa-camera"></i>
                         <br/>
-                        <input id="inputTag" name='file' type="file" onchange="readURL(this);" accept="image/jpeg, image/png, image/jpg"/>
+                        <input id="inputTag" name='file' type="file" onchange="readURL(this);"
+                               accept="image/jpeg, image/png, image/jpg"/>
                         <br/>
                         <span id="imageName"></span>
                     </label>
                 </div>
-                <div class = 'form-container'>
-                    <div class = "sel-algo-container">
-                      <Select class = "sel-algo" id="selectTag" name="algo-sel">
-                        <option value="svm">Support Vector Machine</option>
-                        <option value="cnn">Convolutional Neural Network</option>
-                      </Select>
+                <div class='form-container'>
+                    <div class="sel-algo-container">
+                        <Select class="sel-algo" id="selectTag" name="algo-sel">
+                            <option value="svm">Support Vector Machine</option>
+                            <option value="cnn">Convolutional Neural Network</option>
+                        </Select>
                     </div>
                     <div>
-                        <input class = 'run-py-Classification' type="submit" value="Run Script">
+                        <input class='run-py-Classification' type="submit" value="Run Script">
                     </div>
-                  </div>
-                
+                </div>
+
             </form>
             <div class="py-result">
-                Algo - {{modelName}}<br>
-                Result - {{result}}<br>
-                
+                <div>
+                    <div style="margin-bottom: 10px;">
+                        Algo - {{modelName}}<br>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        Result - {{result}}<br>
+                    </div>
+                    <div style="margin-bottom: 0px;margin-top: 50px;padding: 10px">
+                        <a href="/get_image/{{filename}}" target="blank"><button type="button" style="border-radius: 10px; height: 30px; width: 150px">See the Image</button></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

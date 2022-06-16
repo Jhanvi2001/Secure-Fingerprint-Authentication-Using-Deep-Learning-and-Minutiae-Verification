@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+import keras
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
 
 # Packages for SVM
 import cv2  # for reading image in SVM
@@ -9,6 +10,7 @@ import tensorflow as tf
 from keras.preprocessing import image  # for image preprocessing in CNN
 
 # import the necessary packages for histogram equalization
+from matplotlib import pyplot as plt
 from skimage import feature
 import numpy as np
 
@@ -44,10 +46,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-"""
-will handle the get and post request
-"""
+app.config["CACHE_TYPE"] = "null"
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -64,7 +63,8 @@ def index():
             gray = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # read the imgage
             data = LocalBinaryPatterns(24, 8).describe(gray)  # get the LBP histogram
             model = joblib.load('model\\SVM_rbf.h5')  # load the model
-            return render_template('index.html', modelName="SVM", result=model.predict(data.reshape(1, -1))[0])
+            return render_template('index.html', modelName="SVM", result=model.predict(data.reshape(1, -1))[0],
+                                   filename=f.filename)
 
         # If the Selected option was CNN
         else:
@@ -78,7 +78,7 @@ def index():
                 prediction = 'Live'
             else:
                 prediction = 'Fake'
-            return render_template('index.html', modelName="CNN", result=prediction)
+            return render_template('index.html', modelName="CNN", result=prediction, filename=f.filename)
     else:  # if the request is GET then simply render the index.html
         return render_template('index.html')
 
@@ -86,17 +86,60 @@ def index():
 @app.route('/matching', methods=['POST', 'GET'])
 def matching():
     if request.method == 'POST':
-        data = jsonify(request.form)
-        # print(data)
-        # return render_template(url_for('classifier'), data=data)
-        return render_template('index.html', data=data)
+        return render_template('mathching', )
     else:
         return render_template('matching.html')
 
 
-@app.route('/reconstruction')
+@app.route('/reconstruction', methods=['POST', 'GET'])
 def reconstruction():
+    if request.method == 'POST':
+        f = request.files['file']
+        # save the file to the uploads folder
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+        # save the path of the image
+        image_path = os.path.join(UPLOAD_FOLDER, f.filename)
+
+        autoencoder = keras.models.load_model('model/Reconstructing.h5')
+        test_image = tf.keras.utils.load_img(image_path, target_size=(224, 224))
+        images_arr1 = np.asarray(test_image)
+        images_arr1 = images_arr1.astype('float32')
+        # images_arr1.shape
+        images_arr1 = images_arr1[..., 0]
+
+        images_arr1 = images_arr1.reshape(-1, 224, 224, 1)
+        images_arr1 = images_arr1 / np.max(images_arr1)
+        images_arr1 = images_arr1.reshape(-1, 224, 224, 1)
+        pred1 = autoencoder.predict(images_arr1)
+        fig = plt.figure(figsize=(20, 4))
+        fig.add_subplot(1, 2, 1)
+        print("Showing Test Images")
+        for i in range(1):
+            plt.imshow(images_arr1[i, ..., 0], cmap='gray')
+            plt.title("Original Image" + str(f.filename))
+            print(f.filename)
+        fig.add_subplot(1, 2, 2)
+        print("Reconstruction of Test Images")
+        for i in range(1):
+            plt.imshow(pred1[i, ..., 0], cmap='gray')
+            plt.title("Reconstructed Image")
+        save_str = "web/static/uploads/reconstructed.png"
+        if os.path.exists(save_str):
+            os.remove(save_str)
+        plt.savefig(save_str, bbox_inches='tight')
+        plt.close()
+        return render_template('reconstruction.html', filename='reconstructed.png', result="Done with reconstruction successfully")
     return render_template('reconstruction.html')
+
+
+# To see the image that user has recently uploaded
+@app.route('/get_image/<filename>')
+def get_image(filename):
+    try:
+        return_string = 'static/uploads/' + filename
+        return send_file(return_string, attachment_filename=filename)
+    except Exception as e:
+        return str(e)
 
 
 if __name__ == '__main__':

@@ -179,7 +179,7 @@ select {
     background-image: -moz-linear-gradient(top, #3498db, #2980b9);
     background-image: -ms-linear-gradient(top, #3498db, #2980b9);
     background-image: -o-linear-gradient(top, #3498db, #2980b9);
-    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3497da, #2980b9);
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
     border-radius: 25px;
@@ -190,13 +190,14 @@ select {
     font-size: 26px;
     padding: 9px 20px 10px 20px;
     text-decoration: none;
-    width: 50%;
-    height: 10%;
+    width: 59%;
+    height: 40%;
     text-align: center;
     margin: 10px auto 30px;
-    align-items: center;
-    justify-content: center;
     display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 .run-py:hover{
     background: #3cb0fd;
@@ -215,11 +216,22 @@ select {
     margin: auto;
     border: thin solid black;
     background: rgba(51, 172, 227, 0.4);
-    display: flex;
+    /*display: flex;*/
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-
+.py-result-reconstruction{
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    border: thin solid black;
+    background: rgba(51, 172, 227, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 /* SideBar */
 aside.side-bar-wrap {
     --radius-size: 25px;
