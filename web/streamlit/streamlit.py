@@ -12,6 +12,7 @@ import tensorflow
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle,Ellipse
 from matplotlib.patches import Rectangle
+import time
 
 icon = Image.open('bisag2.jpg')
 st.set_page_config(
@@ -70,7 +71,15 @@ elif choice=="Fingerprint Spoofing":
             prediction = 'Live'
         else:
             prediction = 'Fake'
-        st.write(prediction)
+        with st.spinner('Wait for it...'):
+            time.sleep(2)
+            st.write(prediction)
+            st.success("Done!")
+    
+    else:
+        st.balloons()
+        st.warning("Add image")
+        
             
 elif choice=="Reconstructing Fingerprints":
     if uploaded_file is not None:
@@ -85,28 +94,46 @@ elif choice=="Reconstructing Fingerprints":
         frame= frame.reshape(-1, 224,224, 1)
         pred1 = autoencoder.predict(frame)
         fig=plt.figure(figsize=(5, 5))
+        
         print("Test Images")
         for i in range(1):
             plt.subplot(1, 2, i+1)
             plt.imshow(frame[i, ..., 0], cmap='gray')
-        
         st.write("Original Img")
-        st.pyplot(fig)
+        st.pyplot(fig) 
         
         print("Reconstruction of Test Images")
         for i in range(1):
             plt.subplot(1, 2, i+1)
-            plt.imshow(pred1[i, ..., 0], cmap='gray')  
-        
+            plt.imshow(pred1[i, ..., 0], cmap='gray') 
+            my_bar = st.progress(0)
+            for percent_complete in range(100):
+                time.sleep(0.1)
+                my_bar.progress(percent_complete + 1)
+
         st.write("Reconstructed Img")
         st.pyplot(fig)
+        
+        if st.button("Download"):
+            data=plt.savefig('r1.png',dpi=100)
+            
+    else:
+        st.snow()
+        st.warning("Add image")
 
 elif choice=="Fingerprint Matching":
-    from fingerprint_matching import show_fingername,test_single_sample
-    matching_state, fname, ID = test_single_sample(uploaded_file)
+    if uploaded_file is not None:
+        from fingerprint_matching import show_fingername,test_single_sample
+        matching_state, fname, ID = test_single_sample(uploaded_file)
         # printing result
-    st.image(uploaded_file)
-    st.write(matching_state,'|',fname,'|',ID)
+        st.image(uploaded_file)
+        with st.spinner('Wait for it...'):
+            time.sleep(2)
+            st.write(matching_state,'|',fname,'|',ID)
+            st.success('Done!')
+    else:
+        st.warning("Add image")
+        st.snow()
     
 elif choice=="Help":
         link = '[Bisag-N](https://bisag-n.gov.in/)'
