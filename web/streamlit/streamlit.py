@@ -23,11 +23,10 @@ st.set_page_config(
     
 )
 import webbrowser
-
 model=tensorflow.keras.models.load_model('binary_cnn.h5')
 autoencoder=tensorflow.keras.models.load_model('Reconstructing.h5')
 st.sidebar.subheader("Choose the option ")
-menu = ["Home","Details","Fingerprint Spoofing","Reconstructing Fingerprints","Fingerprint Matching","Help"]
+menu = ["Home","Details","Fingerprint Spoofing","Reconstructing Fingerprints","Fingerprint Matching","All in one","Help"]
 choice = st.sidebar.selectbox("Menu",menu) 
 uploaded_file = st.sidebar.file_uploader("Choose an image")    
 
@@ -134,7 +133,37 @@ elif choice=="Fingerprint Matching":
     else:
         st.warning("Add image")
         st.snow()
-    
+
+elif choice=="All in one":
+    if uploaded_file is not None:
+        my_img = Image.open(uploaded_file)
+        my_img=my_img.convert('RGB')
+        my_img=my_img.resize((128,128))
+        st.image(my_img, caption='Fingerprint')
+        frame = np.array(my_img)
+        frame = np.expand_dims(frame, axis = 0)
+        st.write(frame.shape)
+        result = model.predict(frame)
+        if result[0][0] == 1:
+            prediction = 'Live'
+        else:
+            prediction = 'Fake'
+        st.write(prediction)
+        if prediction=="Live":
+            if uploaded_file is not None:
+                from fingerprint_matching import show_fingername,test_single_sample
+                matching_state, fname, ID = test_single_sample(uploaded_file)
+                # printing result
+                st.write("\n")
+                st.image(uploaded_file)
+                st.write(matching_state,'|',fname,'|',ID)
+        else:
+            st.warning("Fake image")
+            st.balloons()
+    else:
+        st.snow()
+        st.warning("Add image")
+        
 elif choice=="Help":
         link = '[Bisag-N](https://bisag-n.gov.in/)'
         st.markdown(link, unsafe_allow_html=True)
